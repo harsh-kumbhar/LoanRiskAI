@@ -7,28 +7,17 @@ def extract_data_from_pdf(pdf_file):
     for page in reader.pages:
         text += page.extract_text() + " "
 
-    # Helper function to find numbers
-    def find_val(pattern, default):
+    # Helper function: returns None if not found so UI can flag it
+    def find_val(pattern):
         match = re.search(pattern, text, re.IGNORECASE)
-        return int(match.group(1)) if match else default
-
-    # Extracting numerical data
-    income = find_val(r"(?:Salary|Income|Pay)[:\s]*(\d+)", 50000)
-    cibil = find_val(r"(?:CIBIL|Credit|Score)[:\s]*(\d{3})", 700)
-    loan_amt = find_val(r"(?:Loan|Amount|Requested)[:\s]*(\d+)", 1000000)
-    term = find_val(r"(?:Term|Tenure|Period)[:\s]*(\d+)", 12)
-    deps = find_val(r"(?:Dependents|Family)[:\s]*(\d+)", 0)
-
-    # Extracting categorical data
-    edu = "Graduate" if re.search(r"Graduate", text, re.I) else "Not Graduate"
-    emp = "Yes" if re.search(r"(Self-Employed|Business|Owner)", text, re.I) else "No"
+        return int(match.group(1)) if match else None
 
     return {
-        "income": income,
-        "cibil": cibil,
-        "loan_amount": loan_amt,
-        "term": term,
-        "dependents": deps,
-        "education": edu,
-        "self_employed": emp
+        "income": find_val(r"(?:Salary|Income|Pay|Monthly)[:\s]*(\d+)"),
+        "cibil": find_val(r"(?:CIBIL|Credit|Score)[:\s]*(\d{3})"),
+        "loan_amount": find_val(r"(?:Loan|Amount|Requested)[:\s]*(\d+)"),
+        "term": find_val(r"(?:Term|Tenure|Period|Months)[:\s]*(\d+)"),
+        "dependents": find_val(r"(?:Dependents|Family|Children)[:\s]*(\d+)"),
+        "education": "Graduate" if re.search(r"Graduate", text, re.I) else "Not Graduate",
+        "self_employed": "Yes" if re.search(r"(Self-Employed|Business|Owner|Proprietor)", text, re.I) else "No"
     }
