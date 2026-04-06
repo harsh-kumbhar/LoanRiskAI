@@ -2,3 +2,7 @@
 .vs/**/slnx.sqlite
 .vs/**/slnx.sqlite-journal
 *.slnx
+
+# Python bytecode
+__pycache__/
+*.py[cod]
