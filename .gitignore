@@ -1,0 +1,4 @@
+# Visual Studio local solution metadata
+.vs/**/slnx.sqlite
+.vs/**/slnx.sqlite-journal
+*.slnx
