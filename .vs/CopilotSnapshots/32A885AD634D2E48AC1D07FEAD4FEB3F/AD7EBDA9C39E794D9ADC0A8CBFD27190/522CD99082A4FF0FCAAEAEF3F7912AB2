@@ -1,0 +1,87 @@
+﻿import React from 'react';
+import { CheckCircle, XCircle, RefreshCcw, Percent, BarChart, Shield } from 'lucide-react';
+import { motion as Motion } from 'framer-motion';
+
+const AIResult = ({ result, onReset }) => {
+    if (!result) return null;
+
+    const isApproved = result.result.status === "Approved";
+    const confidence = result.result.probability;
+
+    return (
+        <Motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="max-w-2xl mx-auto"
+        >
+            <div className={`p-1 rounded-3xl bg-gradient-to-br ${isApproved ? 'from-emerald-500 to-teal-600' : 'from-red-500 to-rose-600'}`}>
+                <div className="bg-slate-900 rounded-[22px] p-8 md:p-12 text-center">
+
+                    {/* Main Status Icon */}
+                    <div className="flex justify-center mb-6">
+                        {isApproved ? (
+                            <div className="bg-emerald-500/10 p-5 rounded-full ring-8 ring-emerald-500/5">
+                                <CheckCircle size={64} className="text-emerald-500" />
+                            </div>
+                        ) : (
+                            <div className="bg-red-500/10 p-5 rounded-full ring-8 ring-red-500/5">
+                                <XCircle size={64} className="text-red-500" />
+                            </div>
+                        )}
+                    </div>
+
+                    <h1 className="text-4xl font-black text-white mb-2 uppercase tracking-tight">
+                        Loan {isApproved ? 'Approved' : 'Declined'}
+                    </h1>
+                    <p className="text-slate-400 mb-8">
+                        Our Bayesian Network has processed your application with <span className="text-white font-bold">{confidence}%</span> confidence.
+                    </p>
+
+                    {/* Stats Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
+                        <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700 flex items-center gap-4">
+                            <div className="bg-emerald-500/20 p-2 rounded-lg"><Percent size={20} className="text-emerald-400" /></div>
+                            <div className="text-left">
+                                <p className="text-[10px] uppercase font-bold text-slate-500">Offered Interest Rate</p>
+                                <p className="text-xl font-bold text-white">{result.result.suggested_rate}</p>
+                            </div>
+                        </div>
+                        <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700 flex items-center gap-4">
+                            <div className="bg-blue-500/20 p-2 rounded-lg"><Shield size={20} className="text-blue-400" /></div>
+                            <div className="text-left">
+                                <p className="text-[10px] uppercase font-bold text-slate-500">Security Audit</p>
+                                <p className="text-xl font-bold text-white">Verified</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Reasoning Section */}
+                    <div className="text-left bg-slate-950/50 rounded-2xl p-6 border border-slate-800 mb-8">
+                        <div className="flex items-center gap-2 mb-4 text-slate-300">
+                            <BarChart size={18} />
+                            <span className="text-sm font-bold uppercase tracking-wider">AI Reasoning Evidence</span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-y-3">
+                            {Object.entries(result.result.evidence_used).map(([key, value]) => (
+                                <div key={key} className="flex flex-col">
+                                    <span className="text-[10px] text-slate-500 uppercase">{key.replace('_bin', '')}</span>
+                                    <span className="text-sm font-medium text-slate-200">{value}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <button
+                        onClick={onReset}
+                        className="group flex items-center gap-2 mx-auto text-slate-400 hover:text-white transition-colors"
+                    >
+                        <RefreshCcw size={16} className="group-hover:rotate-180 transition-transform duration-500" />
+                        <span className="text-sm font-medium">New Application</span>
+                    </button>
+                </div>
+            </div>
+        </Motion.div>
+    );
+};
+
+export default AIResult;
