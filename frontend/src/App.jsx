@@ -485,7 +485,6 @@ const App = () => {
                             <span className="nav-title">
                                 BayesLoan<span>AI</span>
                             </span>
-                            <span className="nav-badge">v2.0 · Neural Credit</span>
                         </div>
 
                         <div className="nav-actions">
